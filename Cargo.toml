@@ -1,0 +1,8 @@
+[package]
+name = "sort_zh"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chinese-number = "0.6.5"
+rust_icu_ucol = "3.0.0"
