@@ -340,17 +340,29 @@
 <span id="340">340</span>
 <span id="341">341</span>
 <span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
 </pre><pre class="rust"><code><span class="doccomment">//! 這個crate可以協助用戶在Rust專案中更方便的進行中文排序。
 //!
 //! 在Rust中，如果直接使用`sort()`系列function進行Vec的排序，非ASCII部分的文字會因為Unicode Hex Code的排序而混亂。
 //!
 //! 本crate提供了`sort_zh()` function 進行正確的排序（預設透過筆畫順序），用戶也可以利用`SortZhOptions`中的設定進行自定義排序。
 
-</span><span class="kw">use </span><span class="kw">crate</span>::UpperCaseOrder::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ZhNumberOption::<span class="kw-2">*</span>;
+</span><span class="kw">use crate</span>::{
+    UpperCaseOrder::<span class="kw-2">*</span>,
+    ZhNumberOption::<span class="kw-2">*</span>,
+    ChineseVariant::*
+};
 <span class="kw">use </span>chinese_number::{
-    parse_chinese_number_to_i64, ChineseNumberCountMethod, ChineseNumberParseError, ChineseVariant,
-    ChineseVariant::<span class="kw-2">*</span>,
+    parse_chinese_number_to_i64, ChineseNumberCountMethod, ChineseNumberParseError
 };
 <span class="kw">use </span>rust_icu_ucol::UCollator;
 <span class="kw">use </span>std::str::Chars;
@@ -385,6 +397,15 @@
     </span>Before,
     <span class="doccomment">/// 大寫數字排於小寫數字之後（例：`[&quot;一&quot;, &quot;二&quot;, &quot;壹&quot;, &quot;貳&quot;]`）
     </span>After,
+}
+
+<span class="doccomment">/// 中文字類型
+</span><span class="attribute">#[derive(PartialEq)]
+</span><span class="kw">pub enum </span>ChineseVariant {
+    <span class="doccomment">/// 繁體中文
+    </span>Traditional,
+    <span class="doccomment">/// 簡體中文
+    </span>Simplified,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>SortZhOptions {
@@ -425,8 +446,7 @@
 <span class="kw">pub trait </span>SortZh {
     <span class="doccomment">/// 中文排序
     /// ```
-    /// use chinese_number::ChineseVariant::Traditional;
-    /// use sort_zh::{SortZh, SortZhOptions, UpperCaseOrder::*, ZhNumberOption::*};
+    /// use sort_zh::{SortZh, SortZhOptions, UpperCaseOrder::*, ZhNumberOption::*, ChineseVariant::Traditional};
     /// let test = vec![&quot;肆&quot;, &quot;1&quot;, &quot;一&quot;, &quot;2&quot;, &quot;二&quot;, &quot;參&quot;, &quot;正&quot;, &quot;十二測試&quot;, &quot;拾貳測試&quot;, &quot;貳拾測試&quot;, &quot;拾測試二&quot;, &quot;十測試二&quot;];
     /// // 僅透過ICU規範的Collate進行排序
     ///  assert_eq!(test.sort_zh(SortZhOptions::default()), vec![&quot;1&quot;, &quot;2&quot;, &quot;一&quot;, &quot;二&quot;, &quot;十二測試&quot;, &quot;十測試二&quot;, &quot;正&quot;, &quot;拾測試二&quot;, &quot;拾貳測試&quot;, &quot;參&quot;, &quot;貳拾測試&quot;, &quot;肆&quot;]);
@@ -444,7 +464,7 @@
     <span class="kw">fn </span>sort_zh(<span class="kw-2">&amp;</span><span class="self">self</span>, options: SortZhOptions) -&gt; Vec&lt;<span class="kw-2">&amp;</span>str&gt; {
         <span class="kw">let </span>collator = <span class="kw">match </span>options.variant {
             Traditional =&gt; UCollator::try_from(<span class="string">&quot;zh-TW&quot;</span>),
-            Simple =&gt; UCollator::try_from(<span class="string">&quot;zh-CN&quot;</span>),
+            Simplified =&gt; UCollator::try_from(<span class="string">&quot;zh-CN&quot;</span>),
         }
         .expect(<span class="string">&quot;Could not make collator.&quot;</span>);
 

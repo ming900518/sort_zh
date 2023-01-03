@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":[["UpperCaseOrder","大寫數字排序選項"],["ZhNumberOption","中文數字選項"]],"struct":[["SortZhOptions","排序選項"]],"trait":[["SortZh",""]]};
+window.SIDEBAR_ITEMS = {"enum":[["ChineseVariant","中文字類型"],["UpperCaseOrder","大寫數字排序選項"],["ZhNumberOption","中文數字選項"]],"struct":[["SortZhOptions","排序選項"]],"trait":[["SortZh",""]]};
