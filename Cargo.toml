@@ -2,6 +2,11 @@
 name = "sort_zh"
 version = "0.1.0"
 edition = "2021"
+authors = ["Ming Chang <mail@mingchang.tw>"]
+description = "Provide the functionality to sort Vec<&str> with Chinese collate, with optional Chinese number sort functionality."
+license = "MIT"
+documentation = "https://mingchang.tw/sort_zh/index.html"
+repository = "https://github.com/ming900518/sort_zh"
 
 [dependencies]
 chinese-number = "0.6.5"

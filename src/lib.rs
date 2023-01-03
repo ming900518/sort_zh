@@ -20,9 +20,9 @@ pub struct SortZhOptions {
     /// - 繁體中文使用ICU提供的中文台灣（zh_TW）Collate
     ///
     /// - 簡體中文使用ICU提供的中文中國（zh_CN）Collate
-    variant: ChineseVariant,
+    pub variant: ChineseVariant,
     /// 中文數字選項（預設為透過筆畫排序）
-    zh_number_option: ZhNumberOption,
+    pub zh_number_option: ZhNumberOption,
 }
 
 /// 中文數字選項
@@ -39,9 +39,9 @@ pub enum ZhNumberOption {
 /// 大寫數字排序選項
 #[derive(PartialEq)]
 pub enum UpperCaseOrder {
-    // 大寫數字排於小寫數字之前（例：`["壹", "貳", "一", "二"]`）
+    /// 大寫數字排於小寫數字之前（例：`["壹", "貳", "一", "二"]`）
     Before,
-    // 大寫數字排於小寫數字之後（例：`["一", "二", "壹", "貳"]`）
+    /// 大寫數字排於小寫數字之後（例：`["一", "二", "壹", "貳"]`）
     After,
 }
 
@@ -82,6 +82,19 @@ static UPPERCASE_NUM: [char; 50] = [
 
 pub trait SortZh {
     /// 中文排序
+    /// ```
+    /// use chinese_number::ChineseVariant::Traditional;
+    /// use sort_zh::{SortZh, SortZhOptions, UpperCaseOrder::*, ZhNumberOption::*};
+    /// let test = vec!["肆", "1", "一", "2", "二", "參", "正", "十二測試", "拾貳測試", "貳拾測試", "拾測試二", "十測試二"];
+    /// // 僅透過ICU規範的Collate進行排序
+    ///  assert_eq!(test.sort_zh(SortZhOptions::default()), vec!["1", "2", "一", "二", "十二測試", "十測試二", "正", "拾測試二", "拾貳測試", "參", "貳拾測試", "肆"]);
+    /// // 中文數字部分使用中文代表的含義進行排序（不分大小寫），其他中文字透過ICU規範的Collate進行排序
+    ///  assert_eq!(test.sort_zh(SortZhOptions { variant: Traditional, zh_number_option: Definition }), vec!["1", "2", "一", "二", "參", "肆", "拾測試二", "十測試二", "十二測試", "拾貳測試", "貳拾測試", "正"]);
+    /// // 中文數字部分使用中文代表的含義進行排序（區分大小寫，將大寫數字排於小寫之前），其他中文字透過ICU規範的Collate進行排序
+    ///  assert_eq!(test.sort_zh(SortZhOptions { variant: Traditional, zh_number_option: DefinitionWithUpperCase(Before) }), vec!["1", "2", "參", "肆", "拾測試二", "拾貳測試", "貳拾測試", "一", "二", "十測試二", "十二測試", "正"]);
+    /// // 中文數字部分使用中文代表的含義進行排序（區分大小寫，將小寫數字排於大寫之前），其他中文字透過ICU規範的Collate進行排序
+    ///  assert_eq!(test.sort_zh(SortZhOptions { variant: Traditional, zh_number_option: DefinitionWithUpperCase(After) }), vec!["1", "2", "一", "二", "十測試二", "十二測試", "參", "肆", "拾測試二", "拾貳測試", "貳拾測試", "正"]);
+    /// ```
     fn sort_zh(&self, options: SortZhOptions) -> Vec<&str>;
 }
 
