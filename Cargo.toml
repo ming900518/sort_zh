@@ -1,6 +1,6 @@
 [package]
 name = "sort_zh"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Ming Chang <mail@mingchang.tw>"]
 description = "Provide the functionality to sort Vec<&str> with Chinese collate, with optional Chinese number sort functionality."

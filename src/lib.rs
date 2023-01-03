@@ -4,11 +4,13 @@
 //!
 //! 本crate提供了`sort_zh()` function 進行正確的排序（預設透過筆畫順序），用戶也可以利用`SortZhOptions`中的設定進行自定義排序。
 
-use crate::UpperCaseOrder::*;
-use crate::ZhNumberOption::*;
+use crate::{
+    UpperCaseOrder::*,
+    ZhNumberOption::*,
+    ChineseVariant::*
+};
 use chinese_number::{
-    parse_chinese_number_to_i64, ChineseNumberCountMethod, ChineseNumberParseError, ChineseVariant,
-    ChineseVariant::*,
+    parse_chinese_number_to_i64, ChineseNumberCountMethod, ChineseNumberParseError
 };
 use rust_icu_ucol::UCollator;
 use std::str::Chars;
@@ -43,6 +45,15 @@ pub enum UpperCaseOrder {
     Before,
     /// 大寫數字排於小寫數字之後（例：`["一", "二", "壹", "貳"]`）
     After,
+}
+
+/// 中文字類型
+#[derive(PartialEq)]
+pub enum ChineseVariant {
+    /// 繁體中文
+    Traditional,
+    /// 簡體中文
+    Simplified,
 }
 
 impl Default for SortZhOptions {
@@ -83,8 +94,7 @@ static UPPERCASE_NUM: [char; 50] = [
 pub trait SortZh {
     /// 中文排序
     /// ```
-    /// use chinese_number::ChineseVariant::Traditional;
-    /// use sort_zh::{SortZh, SortZhOptions, UpperCaseOrder::*, ZhNumberOption::*};
+    /// use sort_zh::{SortZh, SortZhOptions, UpperCaseOrder::*, ZhNumberOption::*, ChineseVariant::Traditional};
     /// let test = vec!["肆", "1", "一", "2", "二", "參", "正", "十二測試", "拾貳測試", "貳拾測試", "拾測試二", "十測試二"];
     /// // 僅透過ICU規範的Collate進行排序
     ///  assert_eq!(test.sort_zh(SortZhOptions::default()), vec!["1", "2", "一", "二", "十二測試", "十測試二", "正", "拾測試二", "拾貳測試", "參", "貳拾測試", "肆"]);
@@ -102,7 +112,7 @@ impl SortZh for Vec<&str> {
     fn sort_zh(&self, options: SortZhOptions) -> Vec<&str> {
         let collator = match options.variant {
             Traditional => UCollator::try_from("zh-TW"),
-            Simple => UCollator::try_from("zh-CN"),
+            Simplified => UCollator::try_from("zh-CN"),
         }
         .expect("Could not make collator.");
 
