@@ -8,6 +8,17 @@ license = "MIT"
 documentation = "https://mingchang.tw/sort_zh/index.html"
 repository = "https://github.com/ming900518/sort_zh"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
+wasm-bindgen = "*"
+js-sys = "*"
 chinese-number = "0.6.5"
-rust_icu_ucol = "3.0.0"
+rust_icu_ucol = "*"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+opt-level = "z"
